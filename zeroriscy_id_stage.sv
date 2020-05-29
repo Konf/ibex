@@ -92,6 +92,13 @@ module zeroriscy_id_stage
     output logic [31:0] multdiv_operand_a_ex_o,
     output logic [31:0] multdiv_operand_b_ex_o,
 
+    // custom0 ISA extensions
+    output logic        custom0_sel_ex_o,
+    output logic [4:0]  custom0_operator_ex_o,
+    output logic [31:0] custom0_operand_a_ex_o,
+    output logic [31:0] custom0_operand_b_ex_o,
+    output logic [31:0] custom0_operand_c_ex_o,
+
     // CSR
     output logic        csr_access_ex_o,
     output logic [1:0]  csr_op_ex_o,
@@ -150,6 +157,7 @@ module zeroriscy_id_stage
     output logic        perf_jump_o,          // we are executing a jump instruction
     output logic        perf_branch_o,        // we are executing a branch instruction
     output logic        perf_tbranch_o        // we are executing a taken branch instruction
+
 );
 
   logic [31:0] instr;
@@ -231,6 +239,12 @@ module zeroriscy_id_stage
   logic        multdiv_int_en;
   logic [1:0]  multdiv_operator;
   logic [1:0]  multdiv_signed_mode;
+
+
+  // custom0 ISA extensions
+  logic        custom0_sel;
+  logic [4:0]  custom0_operator;
+
 
   // Data Memory Control
   logic        data_we_id;
@@ -499,7 +513,11 @@ module zeroriscy_id_stage
 
     // jump/branches
     .jump_in_id_o                    ( jump_in_id                ),
-    .branch_in_id_o                  ( branch_in_id              )
+    .branch_in_id_o                  ( branch_in_id              ),
+
+    // custom0 ISA extensions
+    .custom0_sel_o                   (custom0_sel                ),
+    .custom0_operator_o              (custom0_operator           )
   );
 
   ////////////////////////////////////////////////////////////////////
@@ -655,6 +673,15 @@ module zeroriscy_id_stage
   assign multdiv_signed_mode_ex_o    = multdiv_signed_mode;
   assign multdiv_operand_a_ex_o      = regfile_data_ra_id;
   assign multdiv_operand_b_ex_o      = regfile_data_rb_id;
+
+
+  assign custom0_sel_ex_o            = custom0_sel; 
+  assign custom0_operator_ex_o       = custom0_operator;
+  assign custom0_operand_a_ex_o      = regfile_data_ra_id;
+  assign custom0_operand_b_ex_o      = regfile_data_rb_id;
+  assign custom0_operand_c_ex_o      = 32'd0; // placeholder for rs3
+
+
 
   enum logic { IDLE, WAIT_MULTICYCLE } id_wb_fsm_cs, id_wb_fsm_ns;
 

@@ -143,6 +143,15 @@ module zeroriscy_core
   logic [31:0] multdiv_operand_a_ex;
   logic [31:0] multdiv_operand_b_ex;
 
+
+  // custom0 ISA extensions
+  logic        custom0_sel_ex;
+  logic [4:0]  custom0_operator_ex;
+  logic [31:0] custom0_operand_a_ex;
+  logic [31:0] custom0_operand_b_ex;
+  logic [31:0] custom0_operand_c_ex;
+
+
   // CSR control
   logic        csr_access_ex;
   logic  [1:0] csr_op_ex;
@@ -400,6 +409,15 @@ module zeroriscy_core
     .multdiv_operand_a_ex_o       ( multdiv_operand_a_ex   ),
     .multdiv_operand_b_ex_o       ( multdiv_operand_b_ex   ),
 
+
+    .custom0_sel_ex_o             ( custom0_sel_ex       ),
+    .custom0_operator_ex_o        ( custom0_operator_ex  ),
+    .custom0_operand_a_ex_o       ( custom0_operand_a_ex ),
+    .custom0_operand_b_ex_o       ( custom0_operand_b_ex ),
+    .custom0_operand_c_ex_o       ( custom0_operand_c_ex ),
+
+
+
     // CSR ID/EX
     .csr_access_ex_o              ( csr_access_ex        ),
     .csr_op_ex_o                  ( csr_op_ex            ),
@@ -486,6 +504,14 @@ module zeroriscy_core
     .multdiv_operand_b_i        ( multdiv_operand_b_ex  ),
     .alu_adder_result_ex_o      ( alu_adder_result_ex   ), // from ALU to LSU
     .regfile_wdata_ex_o         ( regfile_wdata_ex      ),
+
+
+    .custom0_sel_i              ( custom0_sel_ex       ),
+    .custom0_operator_i         ( custom0_operator_ex  ),
+    .custom0_operand_a_i        ( custom0_operand_a_ex ),
+    .custom0_operand_b_i        ( custom0_operand_b_ex ),
+    .custom0_operand_c_i        ( custom0_operand_c_ex ),
+
 
     // To IF: Jump and branch target and decision
     .jump_target_o              ( jump_target_ex        ),

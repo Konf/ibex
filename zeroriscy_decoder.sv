@@ -82,7 +82,12 @@ module zeroriscy_decoder
 
   // jump/branches
   output logic        jump_in_id_o,            // jump is being calculated in ALU
-  output logic        branch_in_id_o
+  output logic        branch_in_id_o,
+
+
+  // custom0 ISA extensions
+  output logic        custom0_sel_o,
+  output logic [4:0]  custom0_operator_o
 );
 
   // write enable/request control
@@ -141,6 +146,12 @@ module zeroriscy_decoder
     mret_insn_o                 = 1'b0;
     ecall_insn_o                = 1'b0;
     pipe_flush_o                = 1'b0;
+
+
+    custom0_sel_o               = 1'b0;
+    custom0_operator_o          = 5'b00000;
+
+
 
     unique case (instr_rdata_i[6:0])
 
@@ -545,6 +556,36 @@ module zeroriscy_decoder
         end
 
       end
+      
+      // Custom ISA extension
+
+      OPCODE_CUST0: begin
+        unique case ({instr_rdata_i[31:30], instr_rdata_i[14:12]})
+          {2'b00, 3'b000}: begin
+            custom0_sel_o       = 1'b1;
+            custom0_operator_o  = 5'b00000;
+          end
+
+          {2'b00, 3'b001}: begin 
+            custom0_sel_o       = 1'b1;
+            custom0_operator_o  = 5'b00001;
+          end
+          {2'b00, 3'b010}: begin 
+            custom0_sel_o       = 1'b1;
+            custom0_operator_o  = 5'b00010;
+          end
+          {2'b00, 3'b011}: begin 
+            custom0_sel_o       = 1'b1;
+            custom0_operator_o  = 5'b00011;
+          end
+                    
+          default : illegal_insn_o = 1'b1;
+        endcase
+      end
+      
+      
+      //OPCODE_CUST1:;
+      
       default: begin
         illegal_insn_o = 1'b1;
       end

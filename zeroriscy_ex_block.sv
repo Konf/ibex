@@ -55,6 +55,17 @@ module zeroriscy_ex_block
   output logic [31:0]             alu_adder_result_ex_o,
   output logic [31:0]             regfile_wdata_ex_o,
 
+
+
+  // custom0 ISA extensions
+  input logic        custom0_sel_i,
+  input logic [4:0]  custom0_operator_i,
+  input logic [31:0] custom0_operand_a_i,
+  input logic [31:0] custom0_operand_b_i,
+  input logic [31:0] custom0_operand_c_i,
+
+
+
   // To IF: Jump and branch target and decision
   output logic [31:0]             jump_target_o,
   output logic                    branch_decision_o,
@@ -68,7 +79,7 @@ module zeroriscy_ex_block
 
   localparam MULT_TYPE = 1; //0 is SLOW
 
-  logic [31:0] alu_result, multdiv_result;
+  logic [31:0] alu_result, multdiv_result, custom0_result;
 
   logic [32:0] multdiv_alu_operand_b, multdiv_alu_operand_a;
   logic [33:0] alu_adder_result_ext;
@@ -91,7 +102,22 @@ end else begin
 end
 endgenerate
 
-  assign regfile_wdata_ex_o = multdiv_en ? multdiv_result : alu_result;
+
+
+  //assign regfile_wdata_ex_o = multdiv_en ? multdiv_result : alu_result;
+
+  always_comb begin
+    unique case ({multdiv_en, custom0_sel_i})
+      {1'b0, 1'b0}: regfile_wdata_ex_o = alu_result;     // ALU operation
+      {1'b1, 1'b0}: regfile_wdata_ex_o = multdiv_result; // MUL\DIV operation
+      {1'b0, 1'b1}: regfile_wdata_ex_o = custom0_result; // Custom0 operation
+      default :     regfile_wdata_ex_o = alu_result;     // Fallback to ALU
+    endcase
+  
+  end
+
+
+
 
   // branch handling
   assign branch_decision_o  = alu_cmp_result;
@@ -171,6 +197,18 @@ endgenerate
     );
   end
   endgenerate
+
+
+  custom0_stub custom_instr_handler (
+    .custom0_sel_i       (custom0_sel_i),
+    .custom0_operator_i  (custom0_operator_i),
+    .custom0_operand_a_i (custom0_operand_a_i),
+    .custom0_operand_b_i (custom0_operand_b_i),
+    .custom0_operand_c_i (custom0_operand_c_i),
+    
+    .custom0_result_o    (custom0_result)
+  );
+
 
   always_comb
   begin
