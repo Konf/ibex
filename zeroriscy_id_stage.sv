@@ -34,6 +34,7 @@ import zeroriscy_defines::*;
 // Source/Destination register instruction index
 `define REG_S1 19:15
 `define REG_S2 24:20
+`define REG_S3 29:25
 `define REG_D  11:07
 
 
@@ -218,12 +219,14 @@ module zeroriscy_id_stage
   // Register file interface
   logic [4:0]  regfile_addr_ra_id;
   logic [4:0]  regfile_addr_rb_id;
+  logic [4:0]  regfile_addr_rc_id;
 
   logic [4:0]  regfile_alu_waddr_id;
   logic        regfile_we_id;
 
   logic [31:0] regfile_data_ra_id;
   logic [31:0] regfile_data_rb_id;
+  logic [31:0] regfile_data_rc_id;
 
   // ALU Control
   logic [ALU_OP_WIDTH-1:0] alu_operator;
@@ -294,6 +297,7 @@ module zeroriscy_id_stage
   //---------------------------------------------------------------------------
   assign regfile_addr_ra_id = instr[`REG_S1];
   assign regfile_addr_rb_id = instr[`REG_S2];
+  assign regfile_addr_rc_id = instr[`REG_S3];
 
   //---------------------------------------------------------------------------
   // destination registers
@@ -442,6 +446,9 @@ module zeroriscy_id_stage
     // Read port b
     .raddr_b_i    ( (dbg_reg_rreq_i == 1'b0) ? regfile_addr_rb_id : dbg_reg_raddr_i ),
     .rdata_b_o    ( regfile_data_rb_id ),
+    // Read port c
+    .raddr_c_i    ( regfile_addr_rc_id ),
+    .rdata_c_o    ( regfile_data_rc_id ),
     // write port
     .waddr_a_i    ( regfile_waddr_mux ),
     .wdata_a_i    ( regfile_wdata_mux ),
@@ -679,7 +686,7 @@ module zeroriscy_id_stage
   assign custom0_operator_ex_o       = custom0_operator;
   assign custom0_operand_a_ex_o      = regfile_data_ra_id;
   assign custom0_operand_b_ex_o      = regfile_data_rb_id;
-  assign custom0_operand_c_ex_o      = 32'd0; // placeholder for rs3
+  assign custom0_operand_c_ex_o      = regfile_data_rc_id;
 
 
 

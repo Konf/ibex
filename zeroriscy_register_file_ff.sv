@@ -46,6 +46,9 @@ module zeroriscy_register_file
   input  logic [4:0]             raddr_b_i,
   output logic [DATA_WIDTH-1:0]  rdata_b_o,
 
+  //Read port R3
+  input  logic [4:0]             raddr_c_i,
+  output logic [DATA_WIDTH-1:0]  rdata_c_o,
 
   // Write port W1
   input  logic [4:0]              waddr_a_i,
@@ -99,5 +102,6 @@ module zeroriscy_register_file
 
   assign rdata_a_o = rf_reg[raddr_a_i];
   assign rdata_b_o = rf_reg[raddr_b_i];
+  assign rdata_c_o = rf_reg[raddr_c_i];
 
 endmodule
