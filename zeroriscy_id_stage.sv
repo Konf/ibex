@@ -34,7 +34,7 @@ import zeroriscy_defines::*;
 // Source/Destination register instruction index
 `define REG_S1 19:15
 `define REG_S2 24:20
-`define REG_S3 29:25
+`define REG_S3 31:27
 `define REG_D  11:07
 
 

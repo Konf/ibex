@@ -560,25 +560,40 @@ module zeroriscy_decoder
       // Custom ISA extension
 
       OPCODE_CUST0: begin
-        unique case ({instr_rdata_i[31:30], instr_rdata_i[14:12]})
+        unique case ({instr_rdata_i[26:25], instr_rdata_i[14:12]})
           {2'b00, 3'b000}: begin
             custom0_sel_o       = 1'b1;
             custom0_operator_o  = 5'b00000;
+            regfile_we     = 1'b1;
           end
 
           {2'b00, 3'b001}: begin 
             custom0_sel_o       = 1'b1;
             custom0_operator_o  = 5'b00001;
+            regfile_we     = 1'b1;
           end
+          
           {2'b00, 3'b010}: begin 
             custom0_sel_o       = 1'b1;
             custom0_operator_o  = 5'b00010;
+            regfile_we     = 1'b1;
           end
+          
           {2'b00, 3'b011}: begin 
             custom0_sel_o       = 1'b1;
             custom0_operator_o  = 5'b00011;
+            regfile_we     = 1'b1;
+            
           end
-                    
+          
+          {2'b00, 3'b100}: begin 
+            custom0_sel_o       = 1'b1;
+            custom0_operator_o  = 5'b00100;
+            regfile_we     = 1'b1;
+          end       
+          
+          
+          
           default : illegal_insn_o = 1'b1;
         endcase
       end

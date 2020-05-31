@@ -199,15 +199,17 @@ endgenerate
   endgenerate
 
 
-  custom0_stub custom_instr_handler (
-    .custom0_sel_i       (custom0_sel_i),
-    .custom0_operator_i  (custom0_operator_i),
-    .custom0_operand_a_i (custom0_operand_a_i),
-    .custom0_operand_b_i (custom0_operand_b_i),
-    .custom0_operand_c_i (custom0_operand_c_i),
-    
-    .custom0_result_o    (custom0_result)
-  );
+
+  fft_accelerator fft_accelerator_inst (
+  .fft_sel_i       (custom0_sel_i),
+  .fft_operator_i  (custom0_operator_i),
+  .fft_operand_a_i (custom0_operand_a_i),
+  .fft_operand_b_i (custom0_operand_b_i),
+  .fft_operand_c_i (custom0_operand_c_i),
+  
+  .fft_result_o    (custom0_result)
+);
+
 
 
   always_comb
