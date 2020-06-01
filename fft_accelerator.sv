@@ -96,6 +96,22 @@ module fft_accelerator (
 
 
 
+  logic [31:0] operand_a_bitreverse;
+
+
+  localparam NUM_BITS = 32;
+
+  genvar i;
+
+  generate
+    for(i=0; i<NUM_BITS; i=i+1)
+    begin
+      assign operand_a_bitreverse[NUM_BITS-1-i] = fft_operand_a_i[i];
+    end
+  endgenerate
+
+
+
   always_comb begin
     unique case (fft_operator_i)
       5'b00000: fft_result_o = {butterfly2_dit_c_im, butterfly2_dit_c_re};
@@ -103,6 +119,7 @@ module fft_accelerator (
       5'b00010: fft_result_o = {butterfly2_dif_c_im, butterfly2_dif_c_re};
       5'b00011: fft_result_o = {butterfly2_dif_d_im, butterfly2_dif_d_re};
       5'b00100: fft_result_o = fast_abs_result;
+      5'b00101: fft_result_o = operand_a_bitreverse >> fft_operand_b_i[4:0]; // Bit reverse
       default : fft_result_o = 32'd0;
     endcase
   

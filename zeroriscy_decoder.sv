@@ -591,6 +591,12 @@ module zeroriscy_decoder
             custom0_operator_o  = 5'b00100;
             regfile_we     = 1'b1;
           end       
+
+          {2'b00, 3'b101}: begin 
+            custom0_sel_o       = 1'b1;
+            custom0_operator_o  = 5'b00101;
+            regfile_we     = 1'b1;
+          end    
           
           
           
